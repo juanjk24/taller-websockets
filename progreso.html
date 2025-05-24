@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seguimiento de Tarea</title>
+</head>
+<body>
+  <h2>Progreso de Tarea</h2>
+  <p>Pega tu token en el script para conectarte:</p>
+  <pre id="progreso">Esperando conexión...</pre>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    //Reemplaza esta línea con tu token copiado desde Postman
+    const token = 'REEMPLAZA_ESTE_TOKEN';
+
+    const socket = io('http://localhost:3000', {
+      auth: {
+        token: token
+      },
+      transports: ['websocket']
+    });
+
+    socket.on('connect', () => {
+      console.log('Conectado');
+    });
+
+    socket.on('progreso-tarea', (data) => {
+      document.getElementById('progreso').textContent = JSON.stringify(data, null, 2);
+    });
+
+    socket.on('tarea-completada', (data) => {
+      alert('Tarea completada');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Desconectado');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('Error de conexión:', err.message);
+    });
+  </script>
+</body>
+</html>
