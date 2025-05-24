@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { TareaProcesoModule } from './tarea-proceso/tarea-proceso.module';
+import { ProgresoModule } from './progreso/progreso.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { TareaProcesoModule } from './tarea-proceso/tarea-proceso.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        type: 'mariadb',
+        type: 'mysql',
         host: configService.get<string>(DB_HOST),
         port: +(configService.get<number>(DB_PORT) ?? 3306),
         username: configService.get<string>(DB_USER),
@@ -32,6 +33,7 @@ import { TareaProcesoModule } from './tarea-proceso/tarea-proceso.module';
     UsuarioModule,
     AuthModule,
     TareaProcesoModule,
+    ProgresoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

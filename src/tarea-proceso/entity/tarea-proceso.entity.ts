@@ -1,18 +1,11 @@
 import { UsuarioEntity } from 'src/usuario/entity/usuario.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-/* 
-
-Se debe modelar e implementar una entidad en base de datos con los siguientes campos
-mínimos:
-• id: Identificador único de la tarea.
-• usuarioId: Usuario que solicitó la tarea.
-• tipo: Descripción del tipo de tarea (ej. “generar reporte”).
-• estado: Puede ser pendiente, en-proceso, completado.
-• progreso: Número entero entre 0 y 100.
-• resultado: Texto opcional con el resultado o mensaje final.
-• fechaInicio y fechaFin.
-*/
+export enum EstadoTarea {
+  PENDIENTE = 'pendiente',
+  EN_PROCESO = 'en-proceso',
+  COMPLETADO = 'completado',
+}
 
 @Entity({ name: 'tarea_proceso' })
 export class TareaProcesoEntity {
@@ -22,8 +15,12 @@ export class TareaProcesoEntity {
   @Column()
   tipo: string;
 
-  @Column()
-  estado: string;
+  @Column({
+    type: 'enum',
+    enum: EstadoTarea,
+    default: EstadoTarea.PENDIENTE,
+  })
+  estado: EstadoTarea;
 
   // progreso numero entre 0 y 100
   @Column({ type: 'int', default: 0 })
@@ -35,15 +32,10 @@ export class TareaProcesoEntity {
   @Column()
   fechaInicio: Date;
 
-  @Column()
-  fechaFin: Date;
+  @Column({ type: "datetime", nullable: true })
+  fechaFin: Date | null;
 
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.tareasProceso)
-    usuario: UsuarioEntity;
-
-  /* @ManyToOne(() => RolEntity, (rol) => rol.usuarios)
-  rol: RolEntity;
-
-  @OneToMany(() => ActividadEntity, (actividad) => actividad.usuario)
-  actividades: ActividadEntity; */
+  @JoinColumn({ name: 'usuarioId', referencedColumnName: 'usu_id' })
+  usuario: UsuarioEntity;
 }

@@ -42,14 +42,17 @@ export class AuthService {
         if(user && await bcrypt.compare(password, user.usu_password)){
             //Excluye la contraseña del objeto retornado para brindar mayor seguridad
             const {usu_password, ...result} = user;
+            
             return result //Retorna el usuario autenticado sin la contraseña
         }
         return null //Retorna null si las credenciales no coinciden
     }
 
     async generateToken(user: any): Promise<{access_token: string}>{
+        
         //Creamos payload con los datos clave del usuario
-        const payload = {username: user.user_nombreUsuario, sub: user.user_id};
+        const payload = {username: user.usu_nombreUsuario, sub: user.usu_id};        
+        
         //Genera un token de acceso usando el servicio de JWT y retorna el token
         return {access_token: this.jwtService.sign(payload)}
     }

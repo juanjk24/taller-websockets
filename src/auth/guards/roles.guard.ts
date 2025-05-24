@@ -8,6 +8,7 @@ export class RolesGuard implements CanActivate {
 
     canActivate(context: ExecutionContext): boolean {
         const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
+        
         if(!requiredRoles){
             //Si no hay roles especificados, permitir el acceso de forma predeterminada
             return true;
@@ -16,10 +17,10 @@ export class RolesGuard implements CanActivate {
         ///Obtenemos el usuario de la solicitud HTTP Actual
         const {user} = context.switchToHttp().getRequest();        
 
-        if(!requiredRoles.includes(user.role)){
+        /* if(!requiredRoles.includes(user.role)){
             //Si el usuario no tiene un rol permito, lanza una excepcion Forbidden
             throw new ForbiddenException('No tienes permisos para acceder a esta ruta');
-        }
+        } */
         return true;
     }
 }
